@@ -4,14 +4,14 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.*
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.text.TextPaint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -201,18 +201,28 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 	}
 	
 	fun resetLoadMore(newAddedSize: Int) {
-		this.notifyItemRangeInserted(this.itemCount, this.itemCount + newAddedSize - 1)
-		this.items?.removeAt(dummyViewPosition!!)
-		this.notifyItemRemoved(dummyViewPosition!!)
-		this.notifyItemRangeChanged(dummyViewPosition!!, getItemCount())
+		
 		
 		
 		if (newAddedSize > 0) {
-			this.items?.add(Dummy())
-			notifyItemInserted(this.items!!.size - 1)
-			this.isLoading = false
+			this.rv?.handler?.postDelayed({
+				this.notifyItemRangeInserted(this.itemCount, this.itemCount + newAddedSize - 1)
+				this.items?.removeAt(dummyViewPosition!!)
+				this.notifyItemRemoved(dummyViewPosition!!)
+				
+				this.items?.add(Dummy())
+				notifyItemInserted(this.items!!.size - 1)
+				this.isLoading = false
+				
+			},500)
+			
 		} else {
+			this.rv?.handler?.postDelayed({
+			this.items?.removeAt(dummyViewPosition!!)
+			this.notifyItemRemoved(dummyViewPosition!!)
+			},500)
 			this.onLoadSet = false
+			
 		}
 	}
 	
@@ -233,7 +243,7 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 			drawable = it.context.getDrawable(R.drawable.overlay) as GradientDrawable
 			
 			drawable?.setBounds(0, 0, it.measuredWidth, it.measuredHeight)
-			drawable?.setStroke(this.defaults.markedItemStrokeWidth,this.defaults.MarkedItemStrokeColor)
+			drawable?.setStroke(convertDpToPixel(this.defaults.markedItemStrokeWidth).toInt(),this.defaults.markedItemStrokeColor)
 			overlay.add(drawable!!)
 			var animator = ObjectAnimator.ofPropertyValuesHolder(drawable, PropertyValuesHolder.ofInt("alpha", 0, 255));
 			animator.setTarget(drawable);
@@ -278,9 +288,12 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 	}
 	
 	fun onSwipe(onSwipeLambda: (position: Int, direction: Int) -> Unit): KAdapter {
-		val touchHandler =
-			ItemTouchHelper(SwipeHandler(onSwipeLambda, 0, this.defaults.swipeDirs))
-		touchHandler.attachToRecyclerView(this.rv)
+		this.rv?.let {
+			val touchHandler =
+				ItemTouchHelper(SwipeHandler(it.context,onSwipeLambda, 0, this.defaults.swipeDirs))
+			touchHandler.attachToRecyclerView(it)
+		}
+	
 		return this
 	}
 	
@@ -397,15 +410,76 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 	}
 	
 	private inner class Dummy()
-	inner class SwipeHandler(val onSwipeLambda: (position: Int, direction: Int) -> Unit,dragDirs: Int,swipeDirs: Int) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
+	inner class SwipeHandler(val mContext:Context,val onSwipeLambda: (position: Int, direction: Int) -> Unit,dragDirs: Int,swipeDirs: Int) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
 		private var mBackground: ColorDrawable? = null
 		private var backgroundColorLeft: Int = 0
 		private var backgroundColorRight: Int = 0
+		var leftpaint =  TextPaint()
+		var leftswipetext=""
+		var rightpaint=Paint()
+		var rightswipetext=""
+		private val textBoundsLeft=Rect()
+		private val textBoundsRight=Rect()
+		
+		private var rightswipeDrawable:Drawable?=null
+		private var rightintrinsicWidth=0
+		private var rightintrinsicHeight=0
+		var rightIconTop = 0
+		var	rightIconMargin = 0
+		var	rightIconLeft = 0
+		var	rightIconRight = 0
+		var	rightIconBottom = 0
+		
+		
+		
+		
+		private var leftswipeDrawable:Drawable?=null
+		private var leftintrinsicWidth=0
+		private var leftintrinsicHeight=0
+		var leftIconTop:Int=0
+		var  leftIconMargin = 0
+		var	leftIconLeft = 0
+		var	leftIconRight =0
+		var	leftIconBottom = 0
 		
 		init {
 			mBackground = ColorDrawable()
 			backgroundColorLeft = defaults.swipeBackgroundColorLeft
 			backgroundColorRight = defaults.swipeBackgroundColorRight
+			
+			defaults.swipeTextLeft?.let {
+				leftswipetext=it
+				leftpaint.textAlign=Paint.Align.RIGHT
+				leftpaint.setColor(defaults.swipeTextLeftColor);
+				leftpaint.setStyle(Paint.Style.FILL);
+				leftpaint.setTextSize(convertSPToPixel(defaults.swipeTextLeftSize));
+				leftpaint.setTypeface(defaults.swipeTextLeftTypeface)
+				leftpaint.getTextBounds(it,0,it.length,textBoundsLeft)
+			}
+			
+			
+			defaults.swipeTextRight?.let {
+				rightswipetext=it
+				rightpaint.textAlign=Paint.Align.LEFT
+				rightpaint.setColor(defaults.swipeTextRightColor);
+				rightpaint.setStyle(Paint.Style.FILL);
+				rightpaint.setTextSize(convertSPToPixel(defaults.swipeTextRightSize));
+				rightpaint.setTypeface(defaults.swipeTextRightTypeface)
+				rightpaint.getTextBounds(it,0,it.length,textBoundsRight)
+			}
+			
+			defaults.swipeLeftDrawable?.let {
+				leftswipeDrawable= ContextCompat.getDrawable(mContext, it)
+				if (leftswipeDrawable==null) Log.e("leftdraw","null") else Log.e("left draw","not null")
+				
+			}
+			
+			defaults.swipeRightDrawable?.let {
+				rightswipeDrawable= ContextCompat.getDrawable(mContext, it)
+				if (rightswipeDrawable==null) Log.e("rightdraw","null") else Log.e("right draw","not null")
+				
+			}
+			
 		}
 		
 		override fun onMove(
@@ -416,40 +490,96 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 			return false
 		}
 		
-		override fun onChildDraw(
-			c: Canvas,
-			recyclerView: RecyclerView,
-			viewHolder: RecyclerView.ViewHolder,
-			dX: Float,
-			dY: Float,
-			actionState: Int,
-			isCurrentlyActive: Boolean
-		) {
+		override fun onChildDraw(c: Canvas,recyclerView: RecyclerView,viewHolder: RecyclerView.ViewHolder,dX: Float,dY: Float,actionState: Int,isCurrentlyActive: Boolean) {
 			super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
 			val itemView = viewHolder.itemView
-			if (dX > 0) {
-				// RIGHT swipe
-				mBackground?.setColor(backgroundColorRight)
-				mBackground?.setBounds(
-					itemView.left, itemView.top,
-					itemView.left + dX.toInt(),
-					itemView.bottom
-				)
-			} else {
-				// LEFT swipe
-				mBackground?.setColor(backgroundColorLeft)
-				mBackground?.setBounds(
-					itemView.getRight() + dX.toInt(),
-					itemView.getTop(), itemView.getRight(), itemView.getBottom()
-				)
+			
+			leftswipeDrawable?.let {
+				leftintrinsicWidth = it.intrinsicWidth
+				leftintrinsicHeight = it.intrinsicHeight
+				 leftIconTop = itemView.getTop() + (itemView.height - leftintrinsicHeight) / 2;
+				 leftIconMargin = (itemView.height - leftintrinsicHeight) / 2;
+				 leftIconLeft = itemView.getRight() - leftIconMargin - leftintrinsicWidth
+				 leftIconRight = itemView.getRight() - leftIconMargin
+				 leftIconBottom = leftIconTop + leftintrinsicHeight
 			}
 			
-			mBackground?.draw(c)
+			rightswipeDrawable?.let {
+				rightintrinsicWidth = it.intrinsicWidth
+				rightintrinsicHeight = it.intrinsicHeight
+				rightIconTop = itemView.getTop() + (itemView.height - rightintrinsicHeight) / 2;
+				rightIconMargin = (itemView.height - rightintrinsicHeight) / 2;
+				rightIconLeft = itemView.getLeft() + rightIconMargin
+				rightIconRight = itemView.getLeft() + rightIconMargin+ rightintrinsicWidth
+				rightIconBottom = rightIconTop + rightintrinsicHeight
+			}
+		
+			
+			
+			if (dX > 0) {
+				Log.e(TAG,"right swip")
+			
+				// RIGHT swipe
+				mBackground?.let {
+					it.setColor(backgroundColorRight)
+					it.setBounds(
+						itemView.left, itemView.top,
+						itemView.left + dX.toInt(),
+						itemView.bottom
+					)
+					it.draw(c)
+				}
+				
+				rightswipeDrawable?.let {
+					it.setBounds(rightIconLeft, rightIconTop, rightIconRight, rightIconBottom)
+					it.draw(c)
+				}
+				rightswipetext?.let {
+					c.drawText(it, itemView?.left!!.toFloat()+convertDpToPixel(10), itemView.top.toFloat()+(itemView.height/2)-textBoundsRight.exactCenterY(),rightpaint )
+					
+				}
+				
+			} else {
+				Log.e(TAG,"left swip")
+				/// LEFT swipe
+				mBackground?.let {
+					it.setColor(backgroundColorLeft)
+					it.setBounds(
+						itemView.getRight() + dX.toInt(),
+						itemView.getTop(), itemView.getRight(), itemView.getBottom()
+					)
+					it.draw(c)
+				}
+				leftswipeDrawable?.let {
+					it.setBounds(leftIconLeft, leftIconTop, leftIconRight, leftIconBottom)
+					it.draw(c)
+				}
+				leftswipetext?.let {
+					c.drawText(it, itemView?.right!!.toFloat()-convertDpToPixel(10), itemView.top.toFloat()+(itemView.height/2)-textBoundsLeft.exactCenterY(), leftpaint)
+					
+				}
+			
+			}
+			
 		}
+		
+	
 		
 		override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 			onSwipeLambda.invoke(viewHolder.adapterPosition, direction)
 		}
+	}
+	private fun convertDpToPixel(dp: Int): Float {
+		val metrics = Resources.getSystem().getDisplayMetrics()
+		val px = dp * (metrics.densityDpi / 160f)
+		return Math.round(px).toFloat()
+	}
+	
+	
+	private fun convertSPToPixel(sp: Int): Float {
+		val metrics = Resources.getSystem().getDisplayMetrics()
+		val px = sp * metrics.scaledDensity
+		return px
 	}
 	
 	inner class SimpleItemDecoration(c: Context) : RecyclerView.ItemDecoration() {
@@ -462,7 +592,7 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 			paintGray = Paint(Paint.ANTI_ALIAS_FLAG)
 			paintGray.setColor(defaults.decorationColor)
 			paintGray.setStyle(Paint.Style.STROKE)
-			paintGray.setStrokeWidth(defaults.decorationStrokeWidth)
+			paintGray.setStrokeWidth(convertDpToPixel(defaults.decorationStrokeWidth))
 		}
 		
 		override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -495,15 +625,35 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 	}
 	
 	data class Defaults(
+		//------------decoration --------------------
 		var decorationColor: Int = Color.GRAY,
-		var decorationStrokeWidth:Float=5f,
+		var decorationStrokeWidth:Int=2,
 		var decorationCornersRadius:Float=10f,
+		//-----------------loadMore--------------------------------
 		var loadMoreDummyViewResId: Int = R.layout.dummy_loading,
 		var loadMoreThreshold: Int = 0,
+		//-----swiping------------------------
 		var swipeDirs: Int=(ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT),
-		var swipeBackgroundColorLeft: Int = Color.parseColor("#FF0000"),
-		var swipeBackgroundColorRight: Int = Color.parseColor("#26B600"),
-		var markedItemStrokeWidth:Int=5,
-		var MarkedItemStrokeColor:Int=Color.BLACK
+		var swipeBackgroundColorLeft: Int = Color.parseColor("#FFFFFF"),
+		var swipeTextLeft:String?=null,
+		var swipeTextLeftColor:Int=Color.parseColor("#000000"),
+		var swipeTextLeftSize:Int=18,
+		var swipeTextLeftTypeface: Typeface=Typeface.DEFAULT,
+		var swipeTextLeftMargin:Float=10f,
+		
+		var swipeBackgroundColorRight: Int = Color.parseColor("#FFFFFF"),
+		var swipeTextRight:String?=null,
+		var swipeTextRightColor:Int=Color.parseColor("#000000"),
+		var swipeTextRightSize:Int=18,
+		var swipeTextRightTypeface: Typeface=Typeface.DEFAULT,
+		var swipeTextRightMargin:Float=10f,
+		
+		var swipeLeftDrawable: Int?=null,
+		var swipeRightDrawable: Int?=null,
+		
+		//---------marking------------------------------------------
+		var markedItemStrokeWidth:Int=3,
+		var markedItemStrokeColor:Int=Color.BLACK
+	//--------------------------------------------------------------
 	)
 }
