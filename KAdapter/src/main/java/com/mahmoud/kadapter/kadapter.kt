@@ -201,10 +201,14 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 	}
 	
 	fun resetLoadMore(newAddedSize: Int) {
+<<<<<<< HEAD
 		
 		
 		
 		if (newAddedSize > 0) {
+=======
+			if (newAddedSize > 0) {
+>>>>>>> 4f5b2f5b892dd15dd729c8437bbba69eb7743aed
 			this.rv?.handler?.postDelayed({
 				this.notifyItemRangeInserted(this.itemCount, this.itemCount + newAddedSize - 1)
 				this.items?.removeAt(dummyViewPosition!!)
