@@ -106,7 +106,7 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 		.withDivider(divider: DividerItemDecoration? = null) 
 		  //default divider ,optional DividerItemDecoration will be applied if passed
 ```
-Item decoration and dividers ,see customization below
+Item decoration and dividers ,see customization below <br>
 <img src="assets/Screenshot_2019-04-01-17-12-14.png" alt="Item decoration and dividers" width="300"/>
 
 
