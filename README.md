@@ -107,6 +107,7 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 		  //default divider ,optional DividerItemDecoration will be applied if passed
 ```
 ![Iitem decoration and dividers ,see customization below](assets/Screenshot_2019-04-01-17-12-14.png =250x)
+<img src="assets/Screenshot_2019-04-01-17-12-14.png" alt="drawing" width="200"/>
 
 
 **Click Actions :**
