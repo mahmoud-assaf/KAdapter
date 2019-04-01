@@ -201,8 +201,10 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 	}
 	
 	fun resetLoadMore(newAddedSize: Int) {
-
-					if (newAddedSize > 0) {
+		
+		
+		
+		if (newAddedSize > 0) {
 			this.rv?.handler?.postDelayed({
 				this.notifyItemRangeInserted(this.itemCount, this.itemCount + newAddedSize - 1)
 				this.items?.removeAt(dummyViewPosition!!)
@@ -533,7 +535,7 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 					it.draw(c)
 				}
 				rightswipetext?.let {
-					c.drawText(it, itemView?.left!!.toFloat()+convertDpToPixel(10), itemView.top.toFloat()+(itemView.height/2)-textBoundsRight.exactCenterY(),rightpaint )
+					c.drawText(it, itemView?.left!!.toFloat()+convertDpToPixel(defaults.swipeTextRightMargin), itemView.top.toFloat()+(itemView.height/2)-textBoundsRight.exactCenterY(),rightpaint )
 					
 				}
 				
@@ -553,7 +555,7 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 					it.draw(c)
 				}
 				leftswipetext?.let {
-					c.drawText(it, itemView?.right!!.toFloat()-convertDpToPixel(10), itemView.top.toFloat()+(itemView.height/2)-textBoundsLeft.exactCenterY(), leftpaint)
+					c.drawText(it, itemView?.right!!.toFloat()-convertDpToPixel(defaults.swipeTextLeftMargin), itemView.top.toFloat()+(itemView.height/2)-textBoundsLeft.exactCenterY(), leftpaint)
 					
 				}
 			
@@ -637,14 +639,14 @@ class KAdapter(defaults: Defaults = Defaults()) : RecyclerView.Adapter<KAdapter.
 		var swipeTextLeftColor:Int=Color.parseColor("#000000"),
 		var swipeTextLeftSize:Int=18,
 		var swipeTextLeftTypeface: Typeface=Typeface.DEFAULT,
-		var swipeTextLeftMargin:Float=10f,
+		var swipeTextLeftMargin:Int=10,
 		
 		var swipeBackgroundColorRight: Int = Color.parseColor("#FFFFFF"),
 		var swipeTextRight:String?=null,
 		var swipeTextRightColor:Int=Color.parseColor("#000000"),
 		var swipeTextRightSize:Int=18,
 		var swipeTextRightTypeface: Typeface=Typeface.DEFAULT,
-		var swipeTextRightMargin:Float=10f,
+		var swipeTextRightMargin:Int=10,
 		
 		var swipeLeftDrawable: Int?=null,
 		var swipeRightDrawable: Int?=null,
