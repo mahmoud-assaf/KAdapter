@@ -106,8 +106,8 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 		.withDivider(divider: DividerItemDecoration? = null) 
 		  //default divider ,optional DividerItemDecoration will be applied if passed
 ```
-![Iitem decoration and dividers ,see customization below](assets/Screenshot_2019-04-01-17-12-14.png =250x)
-<img src="assets/Screenshot_2019-04-01-17-12-14.png" alt="drawing" width="200"/>
+Item decoration and dividers ,see customization below
+<img src="assets/Screenshot_2019-04-01-17-12-14.png" alt="Item decoration and dividers" width="300"/>
 
 
 **Click Actions :**
@@ -135,7 +135,9 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 					adapter.notifyItemRangeChanged(position, adapter.getItemCount()) */
 		}
 ```
-![Swiping text ,can be customized ,see below](assets/Screenshot_2019-04-01-16-45-25.png)
+Swiping text ,can be customized ,see below
+<img src="assets/Screenshot_2019-04-01-16-45-25.png" alt="Swiping text ,can be customized" width="300"/>
+
 
 **Load More data , endless scrolling :** should be set before setting dataset
 ```
@@ -153,7 +155,9 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 		  }
 ```
 
-![Loading more data, progressview can be  customized ,see below](assets/Screenshot_2019-04-01-17-20-27.png)
+Loading more data, progressview can be  customized ,see below
+<img src="assets/Screenshot_2019-04-01-17-20-27.png" alt="Loading more data" width="300"/>
+
 
 
 **Set dataset :**
@@ -189,7 +193,8 @@ var simpleAdapter=KAdapter().simpleAdapter()
 .setData(data)  //ArrayList<String>
 //all other features supported (deoration ,swiping,selection ,loadmore ,click ,longclick ...)
 ```
-![Simple Llist of Strings](assets/Screenshot_2019-04-01-17-13-01.png)
+Simple Llist of Strings
+<img src="assets/Screenshot_2019-04-01-17-13-01.png" alt="Simple Llist of Strings" width="300"/>
 
 
 **-Customization** 
