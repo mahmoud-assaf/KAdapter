@@ -156,6 +156,7 @@ Swiping text ,can be customized ,see below  <br>
 
 Loading more data, progressview can be  customized ,see below  <br>
 <img src="assets/Screenshot_2019-04-01-17-20-27.png" alt="Loading more data" width="300"/>
+<img src="assets/Screenshot_2019-04-01-17-21-30.png" alt="Loading more data" width="300"/>
 
 
 
