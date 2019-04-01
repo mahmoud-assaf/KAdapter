@@ -135,7 +135,7 @@ Item decoration and dividers ,see customization below <br>
 					adapter.notifyItemRangeChanged(position, adapter.getItemCount()) */
 		}
 ```
-Swiping text ,can be customized ,see below
+Swiping text ,can be customized ,see below  <br>
 <img src="assets/Screenshot_2019-04-01-16-45-25.png" alt="Swiping text ,can be customized" width="300"/>
 
 
@@ -155,7 +155,7 @@ Swiping text ,can be customized ,see below
 		  }
 ```
 
-Loading more data, progressview can be  customized ,see below
+Loading more data, progressview can be  customized ,see below  <br>
 <img src="assets/Screenshot_2019-04-01-17-20-27.png" alt="Loading more data" width="300"/>
 
 
@@ -193,7 +193,7 @@ var simpleAdapter=KAdapter().simpleAdapter()
 .setData(data)  //ArrayList<String>
 //all other features supported (deoration ,swiping,selection ,loadmore ,click ,longclick ...)
 ```
-Simple Llist of Strings
+Simple Llist of Strings  <br>
 <img src="assets/Screenshot_2019-04-01-17-13-01.png" alt="Simple Llist of Strings" width="300"/>
 
 
