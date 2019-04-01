@@ -106,7 +106,7 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 		.withDivider(divider: DividerItemDecoration? = null) 
 		  //default divider ,optional DividerItemDecoration will be applied if passed
 ```
-![Iitem decoration and dividers ,see customization below](KAdapter/assets/Screenshot_2019-04-01-17-12-14.png)
+![Iitem decoration and dividers ,see customization below](assets/Screenshot_2019-04-01-17-12-14.png)
 
 
 **Click Actions :**
@@ -134,7 +134,7 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 					adapter.notifyItemRangeChanged(position, adapter.getItemCount()) */
 		}
 ```
-![Swiping text ,can be customized ,see below](KAdapter/assets/Screenshot_2019-04-01-16-45-25.png)
+![Swiping text ,can be customized ,see below](assets/Screenshot_2019-04-01-16-45-25.png)
 
 **Load More data , endless scrolling :** should be set before setting dataset
 ```
@@ -152,7 +152,7 @@ adapter.addViewType(Model1::class to R.layout.model1_item_view)  //Pair<KClass,I
 		  }
 ```
 
-![Loading more data, progressview can be  customized ,see below](KAdapter/assets/Screenshot_2019-04-01-17-20-27.png)
+![Loading more data, progressview can be  customized ,see below](assets/Screenshot_2019-04-01-17-20-27.png)
 
 
 **Set dataset :**
@@ -188,7 +188,7 @@ var simpleAdapter=KAdapter().simpleAdapter()
 .setData(data)  //ArrayList<String>
 //all other features supported (deoration ,swiping,selection ,loadmore ,click ,longclick ...)
 ```
-![Simple Llist of Strings](KAdapter/assets/Screenshot_2019-04-01-17-13-01.png)
+![Simple Llist of Strings](assets/Screenshot_2019-04-01-17-13-01.png)
 
 
 **-Customization** 
