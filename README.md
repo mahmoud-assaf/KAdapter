@@ -215,13 +215,15 @@ swipeTextLeft:String?="Delete",
 swipeTextLeftColor=Color.parseColor("#000000"),   swipeTextLeftSize=18,  //size in sp
 swipeTextLeftTypeface=Typeface.DEFAULT,  //font TypeFace
 swipeTextLeftMargin=10,   //margin in dp from start of child view
+swipeLeftDrawable=null,  //icon drawable
+
 swipeBackgroundColorRight= Color.parseColor("#FFFFFF"),  
  swipeTextRight=null,  
 swipeTextRightColor=Color.parseColor("#000000"),  
 swipeTextRightSize=18,  
 swipeTextRightTypeface=Typeface.DEFAULT,  
 swipeTextRightMargin=10,  
-swipeLeftDrawable=null,  
+  
 swipeRightDrawable=null,  
 //---------marking------------------------------------------  
 markedItemStrokeWidth=3,  //selection decoration stroke width in dp
